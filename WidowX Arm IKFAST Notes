@@ -1,0 +1,111 @@
+turtlebot@NUC-6i7:~/widowx_arm/src/widowx_arm/widowx_arm_description/robots$ 
+
+$ rosrun xacro xacro --inorder -o widowx_arm_ikfast.urdf widowx_arm.urdf.xacro
+$ rosrun collada_urdf urdf_to_collada widowx_arm_ikfast.urdf widowx_arm_ikfast.dae
+$ rosrun moveit_kinematics round_collada_numbers.py widowx_arm_ikfast.dae widowx_arm_ikfast.rounded.dae 5
+$ openrave-robot.py widowx_arm_ikfast.rounded.dae --info links
+
+name              index parents          
+-----------------------------------------
+base_footprint    0                      
+arm_base_link     1     base_footprint   
+shoulder_link     2     arm_base_link    
+biceps_link       3     shoulder_link    
+forearm_link      4     biceps_link      
+wrist_1_link      5     forearm_link     
+wrist_2_link      6     wrist_1_link     
+gripper_rail_link 7     wrist_2_link     
+gripper_1_link    8     gripper_rail_link
+gripper_2_link    9     gripper_rail_link
+gripper_aux_link  10    gripper_rail_link
+-----------------------------------------
+name              index parents       
+
+name                      joint_index dof_index parent_link       child_link        mimic                    
+-------------------------------------------------------------------------------------------------------------
+joint_1                   0           0         arm_base_link     shoulder_link                              
+joint_2                   1           1         shoulder_link     biceps_link                                
+joint_3                   2           2         biceps_link       forearm_link                               
+joint_4                   3           3         forearm_link      wrist_1_link                               
+joint_5                   4           4         wrist_1_link      wrist_2_link                               
+joint_6                   5           5         wrist_2_link      gripper_rail_link                          
+gripper_prismatic_joint_1 6           6         gripper_rail_link gripper_1_link                             
+gripper_revolute_joint    7           7         gripper_rail_link gripper_aux_link                           
+arm_base_joint            -1          -1        base_footprint    arm_base_link                              
+gripper_prismatic_joint_2 -1          -1        gripper_rail_link gripper_2_link    gripper_prismatic_joint_1
+-------------------------------------------------------------------------------------------------------------
+name                      joint_index dof_index parent_link       child_link        mimic 
+
+$ openrave widowx_arm_ikfast.rounded.dae
+
+Expected:
+$ python `openrave-config --python-dir`/openravepy/_openravepy_/ikfast.py --robot=widowx_arm_ikfast.rounded.dae --iktype=translationdirection5d --baselink=1 --eelink=6 --savefile=./ikfast_widowx_arm.cpp -d 1
+
+Successful but not working:
+$ python `openrave-config --python-dir`/openravepy/_openravepy_/ikfast.py --robot=widowx_arm_ikfast.rounded.dae --iktype=transform6d --baselink=1 --eelink=7 --savefile=./ikfast_widowx_arm.cpp -d 1
+
+
+
+## --freeindex=4
+
+name           index parents       
+-----------------------------------
+base_footprint 0                   
+arm_base_link  1     base_footprint
+shoulder_link  2     arm_base_link 
+biceps_link    3     shoulder_link 
+forearm_link   4     biceps_link   
+wrist_1_link   5     forearm_link  
+wrist_2_link   6     wrist_1_link  
+gripper_link   7     wrist_2_link  
+-----------------------------------
+name           index parents 
+
+$ python `openrave-config --python-dir`/openravepy/_openravepy_/ikfast.py --robot=widowx_arm_ikfast.rounded.dae --iktype=translationdirection5d --baselink=1 --eelink=7 --savefile=./ikfast_widowx_arm.cpp -d 1 --freeindex=5
+
+
+The following inverse kinematics types are supported:
+*6dof **Transform6D** - end effector reaches desired 6D transformation
+*3dof **Rotation3D** - end effector reaches desired 3D rotation
+*3dof **Translation3D** - end effector origin reaches desired 3D translation
+*2dof **Direction3D** - direction on end effector coordinate system reaches desired direction
+*4dof **Ray4D** - ray on end effector coordinate system reaches desired global ray
+*2dof **Lookat3D** - direction on end effector coordinate system points to desired 3D position
+*5dof **TranslationDirection5D** - end effector origin and direction reaches desired 3D translation and direction. Can be thought of as Ray IK where the origin of the ray must coincide.
+*2dof **TranslationXY2D** - end effector origin reaches desired XY translation position, Z is ignored. The coordinate system with relative to the base link.
+* **TranslationLocalGlobal6D** - local point on end effector origin reaches desired 3D global point. Because both local point and global point can be specified, there are 6 values.
+*4dof **TranslationXAxisAngle4D**, **TranslationYAxisAngle4D**, **TranslationZAxisAngle4D** - end effector origin reaches desired 3D translation, manipulator direction makes a specific angle with x/y/z-axis (defined in the manipulator base link's coordinate system)
+*4dof **TranslationXAxisAngleZNorm4D**, **TranslationYAxisAngleXNorm4D**, **TranslationZAxisAngleYNorm4D** - end effector origin reaches desired 3D translation, manipulator direction needs to be orthogonal to z, x, or y axis and be rotated at a certain angle starting from the x, y, or z axis (defined in the manipulator base link's coordinate system)
+
+
+
+
+
+
+
+
+
+name             index parents       
+-------------------------------------
+base_footprint   0                   
+arm_base_link    1     base_footprint
+shoulder_link    2     arm_base_link 
+biceps_link      3     shoulder_link 
+forearm_link     4     biceps_link   
+wrist_1_link     5     forearm_link  
+wrist_2_link     6     wrist_1_link  
+gripper_aux_link 7     wrist_2_link  
+-------------------------------------
+name             index parents 
+
+name                   joint_index dof_index parent_link    child_link       mimic
+----------------------------------------------------------------------------------
+joint_1                0           0         arm_base_link  shoulder_link         
+joint_2                1           1         shoulder_link  biceps_link           
+joint_3                2           2         biceps_link    forearm_link          
+joint_4                3           3         forearm_link   wrist_1_link          
+joint_5                4           4         wrist_1_link   wrist_2_link          
+gripper_revolute_joint 5           5         wrist_2_link   gripper_aux_link      
+arm_base_joint         -1          -1        base_footprint arm_base_link         
+----------------------------------------------------------------------------------
+name                   joint_index dof_index parent_link    child_link       mimic
