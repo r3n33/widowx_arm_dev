@@ -5,8 +5,11 @@ Panels:
     Property Tree Widget:
       Expanded:
         - /MotionPlanning1
+        - /MotionPlanning1/Scene Robot1
         - /MotionPlanning1/Planning Request1
-      Splitter Ratio: 0.742560029
+        - /TF1/Frames1
+        - /Pose1
+      Splitter Ratio: 0.551080525
     Tree Height: 866
   - Class: rviz/Help
     Name: Help
@@ -79,6 +82,27 @@ Visualization Manager:
             Show Axes: false
             Show Trail: false
             Value: true
+          camera_depth_frame:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+          camera_depth_optical_frame:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+          camera_rgb_frame:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+          camera_rgb_optical_frame:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+          camera_sr300:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: true
           forearm_link:
             Alpha: 1
             Show Axes: false
@@ -94,10 +118,6 @@ Visualization Manager:
             Show Axes: false
             Show Trail: false
             Value: true
-          gripper_aux_link:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
           gripper_rail_link:
             Alpha: 1
             Show Axes: false
@@ -177,6 +197,27 @@ Visualization Manager:
             Show Axes: false
             Show Trail: false
             Value: true
+          camera_depth_frame:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+          camera_depth_optical_frame:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+          camera_rgb_frame:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+          camera_rgb_optical_frame:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+          camera_sr300:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
+            Value: true
           forearm_link:
             Alpha: 1
             Show Axes: false
@@ -192,10 +233,6 @@ Visualization Manager:
             Show Axes: false
             Show Trail: false
             Value: true
-          gripper_aux_link:
-            Alpha: 1
-            Show Axes: false
-            Show Trail: false
           gripper_rail_link:
             Alpha: 1
             Show Axes: false
@@ -217,8 +254,211 @@ Visualization Manager:
             Show Trail: false
             Value: true
         Robot Alpha: 0.5
-        Show Robot Collision: false
+        Show Robot Collision: true
         Show Robot Visual: true
+      Value: true
+    - Alpha: 1
+      Autocompute Intensity Bounds: true
+      Autocompute Value Bounds:
+        Max Value: 10
+        Min Value: -10
+        Value: true
+      Axis: Z
+      Channel Name: intensity
+      Class: rviz/PointCloud2
+      Color: 255; 255; 255
+      Color Transformer: RGB8
+      Decay Time: 0
+      Enabled: true
+      Invert Rainbow: false
+      Max Color: 255; 255; 255
+      Max Intensity: 4096
+      Min Color: 0; 0; 0
+      Min Intensity: 0
+      Name: PointCloud2
+      Position Transformer: XYZ
+      Queue Size: 10
+      Selectable: true
+      Size (Pixels): 3
+      Size (m): 0.00999999978
+      Style: Flat Squares
+      Topic: /camera/depth_registered/points
+      Unreliable: false
+      Use Fixed Frame: true
+      Use rainbow: true
+      Value: true
+    - Class: rviz/InteractiveMarkers
+      Enable Transparency: true
+      Enabled: true
+      Name: InteractiveMarkers
+      Show Axes: true
+      Show Descriptions: true
+      Show Visual Aids: false
+      Update Topic: /block_controls/update
+      Value: true
+    - Alpha: 1
+      Class: rviz/RobotModel
+      Collision Enabled: false
+      Enabled: true
+      Links:
+        All Links Enabled: true
+        Expand Joint Details: false
+        Expand Link Details: false
+        Expand Tree: false
+        Link Tree Style: Links in Alphabetic Order
+        arm_base_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        base_footprint:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        biceps_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        camera_depth_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        camera_depth_optical_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        camera_rgb_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        camera_rgb_optical_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        camera_sr300:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        forearm_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        gripper_1_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        gripper_2_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        gripper_rail_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        shoulder_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        wrist_1_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        wrist_2_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+      Name: RobotModel
+      Robot Description: robot_description
+      TF Prefix: ""
+      Update Interval: 0
+      Value: true
+      Visual Enabled: true
+    - Class: rviz/TF
+      Enabled: true
+      Frame Timeout: 15
+      Frames:
+        All Enabled: true
+        arm_base_link:
+          Value: true
+        base_footprint:
+          Value: true
+        biceps_link:
+          Value: true
+        camera_depth_frame:
+          Value: true
+        camera_depth_optical_frame:
+          Value: true
+        camera_rgb_frame:
+          Value: true
+        camera_rgb_optical_frame:
+          Value: true
+        camera_sr300:
+          Value: true
+        forearm_link:
+          Value: true
+        gripper_1_link:
+          Value: true
+        gripper_2_link:
+          Value: true
+        gripper_rail_link:
+          Value: true
+        shoulder_link:
+          Value: true
+        wrist_1_link:
+          Value: true
+        wrist_2_link:
+          Value: true
+      Marker Scale: 0.200000003
+      Name: TF
+      Show Arrows: true
+      Show Axes: true
+      Show Names: true
+      Tree:
+        base_footprint:
+          arm_base_link:
+            shoulder_link:
+              biceps_link:
+                forearm_link:
+                  wrist_1_link:
+                    wrist_2_link:
+                      gripper_rail_link:
+                        gripper_1_link:
+                          {}
+                        gripper_2_link:
+                          {}
+          camera_sr300:
+            camera_rgb_frame:
+              camera_depth_frame:
+                camera_depth_optical_frame:
+                  {}
+              camera_rgb_optical_frame:
+                {}
+      Update Interval: 0
+      Value: true
+    - Alpha: 1
+      Axes Length: 0.100000001
+      Axes Radius: 0.00999999978
+      Class: rviz/Pose
+      Color: 255; 25; 0
+      Enabled: true
+      Head Length: 0.300000012
+      Head Radius: 0.100000001
+      Name: Pose
+      Shaft Length: 1
+      Shaft Radius: 0.0500000007
+      Shape: Axes
+      Topic: /target_pose
+      Unreliable: false
       Value: true
   Enabled: true
   Global Options:
@@ -235,24 +475,24 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/XYOrbit
-      Distance: 0.894872427
+      Distance: 1.1431154
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.0599999987
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: 0.100689843
-        Y: -0.0152857453
-        Z: 2.53320309e-07
+        X: 0.110834017
+        Y: 0.129222542
+        Z: 1.56462761e-07
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.0500000007
       Name: Current View
       Near Clip Distance: 0.00999999978
-      Pitch: 0.294797152
+      Pitch: 0.26979655
       Target Frame: base_footprint
       Value: XYOrbit (rviz)
-      Yaw: 2.09176397
+      Yaw: 5.28493404
     Saved: ~
 Window Geometry:
   Displays:
@@ -264,9 +504,9 @@ Window Geometry:
   Hide Right Dock: false
   MotionPlanning:
     collapsed: false
-  QMainWindow State: 000000ff00000000fd0000000100000000000002b40000069ffc0200000006fb000000100044006900730070006c0061007900730100000041000003f7000000d100fffffffb0000000800480065006c00700000000342000000bb0000007000fffffffb0000000a0056006900650077007300000003b0000000b0000000ae00fffffffb0000000c00430061006d00650072006100000002ff000001610000000000000000fb0000001e004d006f00740069006f006e00200050006c0061006e006e0069006e00670100000374000001890000000000000000fb0000001c004d006f00740069006f006e0050006c0061006e006e0069006e0067010000043e000002a2000001b200ffffff000005820000069f00000001000000020000000100000002fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
+  QMainWindow State: 000000ff00000000fd00000001000000000000040a0000069ffc0200000006fb000000100044006900730070006c0061007900730100000041000003f7000000d100fffffffb0000000800480065006c00700000000342000000bb0000007000fffffffb0000000a0056006900650077007300000003b0000000b0000000ae00fffffffb0000000c00430061006d00650072006100000002ff000001610000000000000000fb0000001e004d006f00740069006f006e00200050006c0061006e006e0069006e00670100000374000001890000000000000000fb0000001c004d006f00740069006f006e0050006c0061006e006e0069006e0067010000043e000002a2000001b200ffffff0000042c0000069f00000001000000020000000100000002fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
   Views:
     collapsed: false
   Width: 2108
-  X: 385
-  Y: 26
+  X: 1093
+  Y: 25

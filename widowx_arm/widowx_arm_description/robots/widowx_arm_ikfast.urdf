@@ -147,4 +147,13 @@
     <limit effort="0" lower="-0.31" upper="0.1" velocity="0.5"/>
   </joint>
   <link name="gripper_aux_link"/-->
+
+  <link name="gripper_link"/>
+    <joint name="gripper_link_joint" type="revolute">
+      <origin xyz="0 0 0.110" rpy="0 0 0"/>
+      <parent link="wrist_2_link" />
+      <child link="gripper_link"/>
+      <limit effort="6" velocity="1" lower="-3.14" upper="3.14"/>
+      <axis xyz="1 0 0"/>
+    </joint>
 </robot>
