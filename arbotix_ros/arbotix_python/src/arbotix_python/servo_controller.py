@@ -18,7 +18,7 @@
   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
   ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
   WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-  DISCLAIMED. IN NO EVENT SHALL VANADIUM LABS BE LIABLE FOR ANY DIRECT, INDIRECT,
+  DISCLAIMED. IN NO EVENT SHALL VANADIUM LABS OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
   INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
   LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,
   OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
@@ -37,6 +37,7 @@ from diagnostic_msgs.msg import *
 
 from ax12 import *
 from joints import *
+from arbotix_python.parallel_convert import *
 
 class DynamixelServo(Joint):
 
@@ -67,6 +68,7 @@ class DynamixelServo(Joint):
 
         self.dirty = False                      # newly updated position?
         self.position = 0.0                     # current position, as returned by servo (radians)
+        self.jst_position= 0.0                  # position to report as Joint Status
         self.desired = 0.0                      # desired position (radians)
         self.last_cmd = 0.0                     # last position sent (radians)
         self.velocity = 0.0                     # moving speed
@@ -81,7 +83,9 @@ class DynamixelServo(Joint):
 
         self.voltage = 0.0
         self.temperature = 0.0
-        
+        self.tolerance = rospy.get_param(n + "tolerance", 0.05)   # Default 0.05 radians
+        rospy.loginfo("Started Servo %d  %s", self.id, name)
+
         # ROS interfaces
         rospy.Subscriber(name+'/command', Float64, self.commandCb)
         rospy.Service(name+'/relax', Relax, self.relaxCb)
@@ -91,6 +95,9 @@ class DynamixelServo(Joint):
     def interpolate(self, frame):
         """ Get the new position to move to, in ticks. """
         if self.enabled and self.active and self.dirty:
+            # cap movement
+            if abs(self.last_cmd - self.desired) < self.tolerance:
+                self.dirty = False
             # compute command, limit velocity
             cmd = self.desired - self.last_cmd
             if cmd > self.max_speed/frame:
@@ -101,9 +108,6 @@ class DynamixelServo(Joint):
             ticks = self.angleToTicks(self.last_cmd + cmd)
             self.last_cmd = self.ticksToAngle(ticks)
             self.speed = cmd*frame
-            # cap movement
-            if self.last_cmd == self.desired:
-                self.dirty = False
             # when fake, need to set position/velocity here
             if self.device.fake:
                 last_angle = self.position
@@ -119,6 +123,9 @@ class DynamixelServo(Joint):
                 self.velocity = 0.0
                 self.last = rospy.Time.now()
             return None
+            
+    def jstPosition(self, pos):
+        return self.ticksToAngle(pos)  # report Joint Status in radians
 
     def setCurrentFeedback(self, reading):
         """ Update angle in radians by reading from servo, or by 
@@ -128,6 +135,7 @@ class DynamixelServo(Joint):
             self.total_reads += 1
             last_angle = self.position
             self.position = self.ticksToAngle(reading)
+            self.jst_position = self.jstPosition(reading)
             # update velocity estimate
             t = rospy.Time.now()
             self.velocity = (self.position - last_angle)/((t - self.last).to_nsec()/1000000000.0)
@@ -158,10 +166,11 @@ class DynamixelServo(Joint):
         if self.temperature > 60:   # TODO: read this value from eeprom
             self.status = "OVERHEATED, SHUTDOWN"
             self.level = DiagnosticStatus.ERROR
-        elif self.temperature > 50 and self.status != "OVERHEATED, SHUTDOWN":
+        elif self.temperature > 50: #TODO: RREMOVE and self.status != "OVERHEATED, SHUTDOWN":
             self.status = "OVERHEATING"
             self.level = DiagnosticStatus.WARN
-        elif self.status != "OVERHEATED, SHUTDOWN":
+        #TODO: RREMOVE elif self.status != "OVERHEATED, SHUTDOWN":
+        else:
             self.status = "OK"
             self.level = DiagnosticStatus.OK
         msg.level = self.level
@@ -248,6 +257,17 @@ class DynamixelServo(Joint):
             ticks_per_sec = max(1, int(self.speedToTicks(req.speed)))
             self.device.setSpeed(self.id, ticks_per_sec)
         return SetSpeedResponse()
+        
+class PrismaticDynamixelServo(DynamixelServo):
+
+    def __init__(self, device, name, ns="~joints"):
+        DynamixelServo.__init__(self, device, name)
+        self.convertor = ParallelConvert(name)
+        rospy.loginfo(name + " prismatic joint")
+                        
+    def jstPosition(self, pos):
+        return self.convertor.angleToWidth(self.ticksToAngle(pos)) # report Joint Status in meters
+        
 
 class HobbyServo(Joint):
 
@@ -365,6 +385,8 @@ class ServoController(Controller):
         for joint in device.joints.values():
             if isinstance(joint, DynamixelServo):
                 self.dynamixels.append(joint)
+            elif isinstance(joint, PrismaticDynamixelServo):
+                self.dynamixels.append(joint)
             elif isinstance(joint, HobbyServo):
                 self.hobbyservos.append(joint)
 
@@ -373,9 +395,6 @@ class ServoController(Controller):
 
         self.r_delta = rospy.Duration(1.0/rospy.get_param("~read_rate", 10.0))
         self.r_next = rospy.Time.now() + self.r_delta
-
-        rospy.Service(name + '/relax_all', Relax, self.relaxCb)
-        rospy.Service(name + '/enable_all', Enable, self.enableCb)
 
     def update(self):
         """ Read servo positions, update them. """
@@ -393,8 +412,9 @@ class ServoController(Controller):
                             try:
                                 i = synclist.index(joint.id)*2
                                 joint.setCurrentFeedback(val[i]+(val[i+1]<<8))
-                            except:
+                            except Exception as e:
                                 # not a readable servo
+                                rospy.logerr("Servo read error: " + str(e) )
                                 continue 
             else:
                 # direct connection, or other hardware with no sync_read capability
@@ -457,14 +477,3 @@ class ServoController(Controller):
         self.iter += 1
         return None
 
-    def enableCb(self, req):
-        """ Turn on/off all servos torque, so that they are pose-able. """
-        for joint in self.dynamixels:
-            resp = joint.enableCb(req)
-        return resp
-
-    def relaxCb(self, req):
-        """ Turn off all servos torque, so that they are pose-able. """
-        for joint in self.dynamixels:
-            resp = joint.relaxCb(req)
-        return resp

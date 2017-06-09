@@ -45,7 +45,7 @@ class ArbotiX:
     ##
     ## @param timeout The timeout to use for the port. When operating over a wireless link, you may need to
     ## increase this.
-    def __init__(self, port="/dev/ttyUSB0",baud=115200, timeout = 0.1):
+    def __init__(self, port="/dev/arbotix",baud=115200, timeout = 0.1):
         self._mutex = thread.allocate_lock()
         self._ser = serial.Serial()
         

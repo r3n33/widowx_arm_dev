@@ -150,9 +150,9 @@ class TrapezoidGripperModel(GripperModel):
         return 1.0
        
 class ParallelGripperModel(GripperModel):
-    # One servo to open/close parallel jaws, typically via linkage. 
-    # TODO - currently we only show one finger, and report twice the distance.  Opening 
-    # reports correct width but center is not correct
+	# One servo to open/close parallel jaws, typically via linkage. 
+	# TODO - currently we only show one finger, and report twice the distance.  Opening 
+	# reports correct width but center is not correct
     def __init__(self):
         GripperModel.__init__(self)
         self.convertor = ParallelConvert(self.joint)
@@ -261,3 +261,4 @@ if __name__=='__main__':
         GripperActionController()
     except rospy.ROSInterruptException:
         rospy.loginfo('Hasta la Vista...')
+
