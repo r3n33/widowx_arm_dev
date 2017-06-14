@@ -28,6 +28,7 @@
  */
 
 #include <ros/ros.h>
+#include <tf/tf.h>
 
 #include <actionlib/client/simple_action_client.h>
 #include <widowx_block_manipulation/BlockDetectionAction.h>
@@ -87,14 +88,14 @@ public:
     nh_.param<std::string>("arm_link", arm_link, "/arm_link");
     nh_.param<double>(gripper_param + "/max_opening", gripper_open, 0.042);
     nh_.param<double>("grip_tighten", gripper_tighten, 0.004);
-    nh_.param<double>("z_up", z_up, 0.06);   // amount to lift during move
+    nh_.param<double>("z_up", z_up, 0.14);   // amount to lift during move
     nh_.param<double>("table_height", z_down, 0.0);
     nh_.param<double>("block_size", block_size, 0.02);  // block size to detect
     
-    nh_.param<double>("target_match_x", target_match_x, 0.15);    // X target for matching block
+    nh_.param<double>("target_match_x", target_match_x, 0.0);    // X target for matching block
     nh_.param<double>("target_match_y", target_match_y, -0.15);   // Y target for matching block
 
-    nh_.param<double>("target_discard_x", target_discard_x, 0.15);    // X target for non-matching block
+    nh_.param<double>("target_discard_x", target_discard_x, 0.0);    // X target for non-matching block
     nh_.param<double>("target_discard_y", target_discard_y, 0.15);   // Y target for non-matching block
     
     nh_.param<double>("target_bin_height", target_bin_height, 0.06);   // Where to lower the arm when dropping into bin
@@ -113,7 +114,7 @@ public:
     pick_and_place_goal_.topic = pick_and_place_topic;
         
     ROS_INFO("Gripper settings: closed=%.4f block size=%.4f tighten=%.4f", (float)pick_and_place_goal_.gripper_closed, (float)block_size, (float)gripper_tighten );
-    
+    ROS_INFO("Sorting settings: z_up=%0.2f target_x=%.4f target_y=%.4f", pick_and_place_goal_.z_up, (float)target_match_x, (float)target_match_y );
     interactive_manipulation_goal_.block_size = block_size;
     interactive_manipulation_goal_.frame = arm_link;
     
@@ -221,6 +222,9 @@ public:
       endPose.position.y = target_discard_y;
     }
     endPose.position.z = target_bin_height;
+
+    tf::Quaternion q = tf::createQuaternionFromRPY(3.14, 0.0, -3.14);
+    tf::quaternionTFToMsg(q, endPose.orientation);
     
     ROS_DEBUG("Block End Pose x=%.4f y=%.4f z=%.4f", endPose.position.x, endPose.position.y, endPose.position.z);
     
@@ -238,25 +242,23 @@ public:
     start_pose.position = start_block_pose.position;
     start_pose.orientation = start_block_pose.orientation;
 
-    double bump_size = 0.005;
     double eef_length = 0.08;
+
     // Return pickup and place poses as the result of the action
-    
     start_pose_bumped = start_pose;
-    start_pose_bumped.position.z -= block_size/2.0 - bump_size;
+    start_pose_bumped.position.z -= block_size/2.0;
     start_pose_bumped.position.z += eef_length;
 
     end_pose_bumped = end_pose;
-    end_pose_bumped.position.z -= block_size/2.0 - bump_size;
-    end_pose_bumped.position.z += eef_length;
+    end_pose_bumped.position.z -= block_size/2.0;
     
     // Publish pickup and place poses for visualizing on RViz
     poseMsg.header.frame_id = arm_link;
     poseMsg.header.stamp = ros::Time::now();
     poseMsg.poses.push_back(start_pose_bumped);
     poseMsg.poses.push_back(end_pose_bumped);
+
     //ROS_INFO("Demo publishing to PickNPlace.  PoseX=%.4f", (float) poseMsg.poses[0].position.x);
-    
     pick_and_place_goal_.pickup_pose = start_pose_bumped;
     pick_and_place_goal_.place_pose = end_pose_bumped;
     pick_and_place_goal_.topic = "";

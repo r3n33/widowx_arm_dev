@@ -335,14 +335,7 @@ public:
 
         xmin += xside/2.0;
         ymin += yside/2.0;
-        zmax -= block_size_/2.0;
-        
-        //TODO: Don't exclude blocks by hardcoded bounds
-        if ( fabs(ymin) > 0.142 )
-        {
-          ROS_ERROR( "Block Y was outisde bounds" );
-          continue;
-        }
+        //zmax -= block_size_/2.0;
 
         ROS_INFO("Adding a new block! x=%.3f y=%.3f z=%.3f", (float) xmin , (float) ymin , (float) zmax );
         

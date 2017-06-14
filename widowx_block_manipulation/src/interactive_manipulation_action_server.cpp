@@ -67,18 +67,12 @@ private:
   // Parameters from goal
   std::string arm_link;
   double      block_size;
-  
-  // Parameters from server
-  double bump_size;
 
 public:
 
   InteractiveManipulationServer(const std::string name) : 
      nh_("~"), server_("block_controls"), as_(name, false), action_name_(name), initialized_(false), block_size(0)
   {
-    // Load parameters from the server.
-    nh_.param<double>("bump_size", bump_size, 0.005);
-    
     // Register the goal and feeback callbacks.
     as_.registerGoalCallback(boost::bind(&InteractiveManipulationServer::goalCB, this));
     as_.registerPreemptCallback(boost::bind(&InteractiveManipulationServer::preemptCB, this));
@@ -163,13 +157,13 @@ public:
     // Return pickup and place poses as the result of the action
     geometry_msgs::Pose start_pose_bumped, end_pose_bumped;
     start_pose_bumped = start_pose;
-    start_pose_bumped.position.z -= block_size/2.0 - bump_size;
+    start_pose_bumped.position.z -= block_size/2.0;
     start_pose_bumped.position.z += eef_length;
 
     result_.pickup_pose = start_pose_bumped;
     
     end_pose_bumped = end_pose;
-    end_pose_bumped.position.z -= block_size/2.0 - bump_size;
+    end_pose_bumped.position.z -= block_size/2.0;
     end_pose_bumped.position.z += eef_length;
     result_.place_pose = end_pose_bumped;
     
