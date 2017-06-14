@@ -7,19 +7,10 @@
     </material>
   </xacro:property>
 
-
-  
   <!-- Intel SR300 parameters -->
-  <xacro:property name="sr300_cam_offset_px" value="0.2" />
+  <xacro:property name="sr300_cam_offset_px" value="0.330" />
   <xacro:property name="sr300_cam_offset_py" value="0.0" />
-  <xacro:property name="sr300_cam_offset_pz" value="0.370" />
-
-  <!--
-  <xacro:property name="sr300_cam_rgb_px" value="0.005"/>
-  <xacro:property name="sr300_cam_rgb_py" value="0.018"/>
-  <xacro:property name="sr300_cam_rgb_pz" value="0.013"/>
-  <xacro:property name="sr300_cam_depth_offset" value="0.01"/>
-  -->
+  <xacro:property name="sr300_cam_offset_pz" value="0.380" />
 
   <xacro:property name="sr300_cam_rgb_px" value="0.012"/>
   <xacro:property name="sr300_cam_rgb_py" value="0.003"/>
@@ -35,7 +26,7 @@
     
     <!-- camera_sr300 body -->
     <joint name="camera_joint" type="fixed">
-      <origin xyz="${sr300_cam_offset_px} ${sr300_cam_offset_py} ${sr300_cam_offset_pz}" rpy="0 1.57 0"/>
+      <origin xyz="${sr300_cam_offset_px} ${sr300_cam_offset_py} ${sr300_cam_offset_pz}" rpy="0 1.16 3.14"/>
       <parent link="${parent}"/>
       <child link="camera_sr300" />
     </joint>
@@ -43,14 +34,14 @@
       <visual>
        <origin xyz="0 0 0" rpy="0 0 0"/>
         <geometry>
-         <mesh filename="package://turtlebot2i_description/meshes/sensors/sr300.stl" />
+         <mesh filename="package://widowx_arm_description/meshes/sensors/sr300.stl" />
         </geometry>
         <xacro:insert_block name="material_black"/>
       </visual>
       <collision>
         <origin xyz="0.0 0.0 0.0" rpy="0 0 0"/>
         <geometry>
-          <mesh filename="package://turtlebot2i_description/meshes/sensors/sr300.stl" scale="2.0 2.0 2.0" />
+          <mesh filename="package://widowx_arm_description/meshes/sensors/sr300.stl" scale="2.0 2.0 2.0" />
         </geometry>
       </collision>
  
@@ -105,8 +96,8 @@
         <child link="camera_depth_optical_frame" />
     </joint>
     <link name="camera_depth_optical_frame"/>
-  	
-  	<!-- Simulation sensor -->
+    
+    <!-- Simulation sensor -->
     <gazebo reference="camera_sr300">  
       <sensor type="depth" name="camera_sr300">
         <always_on>true</always_on>

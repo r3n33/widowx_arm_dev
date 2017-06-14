@@ -127,33 +127,13 @@
     <axis xyz="0 1 0"/>
     <limit effort="0" lower="-1.745" upper="1.745" velocity="1.571"/>
   </joint>
-  <joint name="joint_5" type="revolute"> <!-- pincher arm gripper link joint from wrist flex -->
+  <joint name="joint_5" type="revolute"> <!-- wrist rotate -->
     <origin rpy="0 0 0" xyz="0 0 0.0715"/>
     <parent link="wrist_1_link"/>
     <child link="wrist_2_link"/>
-    <!--Works: axis xyz="1 0 0"/>-->
-    <!--Desired/Brokn: axis xyz="0 0 1"/-->
-    <!--Brokn: axis xyz="0 1 0"/-->
-    <axis xyz="1 0 0"/>
+    <!--axis xyz="0 0 1"/-->
+    <axis xyz="1 0 0"/> <!-- needed for ikfast solution -->
     <limit effort="0" lower="-2.617" upper="2.617" velocity="1.571"/>
   </joint>
 
-  <!-- Fake 6 dof? 
-  <joint name="joint_6" type="fixed">
-    <origin rpy="0 0 0" xyz="0 0 0.043"/>
-    <parent link="wrist_2_link"/>
-    <child link="gripper_aux_link"/>
-    <axis xyz="1 0 0"/>
-    <limit effort="0" lower="-0.31" upper="0.1" velocity="0.5"/>
-  </joint>
-  <link name="gripper_aux_link"/-->
-
-  <link name="gripper_link"/>
-    <joint name="gripper_link_joint" type="revolute">
-      <origin xyz="0 0 0.110" rpy="0 0 0"/>
-      <parent link="wrist_2_link" />
-      <child link="gripper_link"/>
-      <limit effort="6" velocity="1" lower="-3.14" upper="3.14"/>
-      <axis xyz="1 0 0"/>
-    </joint>
 </robot>
