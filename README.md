@@ -6,4 +6,4 @@ Using SR300 for pointcloud.
 
 roslaunch widowx_arm_moveit_config widowx_arm_moveit.launch sim:=false
 
-roslaunch turtlebot2i_block_manipulation block_sorting_demo.launch
+roslaunch widowx_block_manipulation block_sorting_demo.launch

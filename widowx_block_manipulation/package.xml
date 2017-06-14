@@ -1,8 +1,8 @@
 <package>
-  <name>turtlebot2i_block_manipulation</name>
+  <name>widowx_block_manipulation</name>
   <version>0.1.0</version>
   <description>
-    turtlebot2i_block_manipulation contains a demo allowing the TurtleBot2i
+    widowx_block_manipulation contains a demo allowing the TurtleBot2i
     to manipulate small blocks on a level surface using interactive markers
     or autonomously sort by color.
   </description>

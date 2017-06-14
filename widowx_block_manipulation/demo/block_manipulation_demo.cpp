@@ -30,9 +30,9 @@
 #include <ros/ros.h>
 
 #include <actionlib/client/simple_action_client.h>
-#include <turtlebot2i_block_manipulation/BlockDetectionAction.h>
-#include <turtlebot2i_block_manipulation/PickAndPlaceAction.h>
-#include <turtlebot2i_block_manipulation/InteractiveBlockManipulationAction.h>
+#include <widowx_block_manipulation/BlockDetectionAction.h>
+#include <widowx_block_manipulation/PickAndPlaceAction.h>
+#include <widowx_block_manipulation/InteractiveBlockManipulationAction.h>
 #include <arbotix_msgs/Relax.h>
 
 #include <geometry_msgs/PoseArray.h>
@@ -43,7 +43,7 @@
 const std::string gripper_param = "/gripper_controller";
 const std::string pick_and_place_topic = "/pick_and_place";
 
-namespace turtlebot2i_block_manipulation
+namespace widowx_block_manipulation
 {
 
 class BlockManipulationAction
@@ -69,7 +69,7 @@ private:
   
   double target_match_x, target_match_y, target_discard_x, target_discard_y, target_bin_height;
 
-  turtlebot2i_block_manipulation::BlockPoseArray block_list_; //list of the positions and colors of blocks we've found
+  widowx_block_manipulation::BlockPoseArray block_list_; //list of the positions and colors of blocks we've found
   
   int blockIndex;  // block we are working on
   int blockCount;  // number of blocks found
@@ -139,7 +139,7 @@ public:
   void addBlocks(const actionlib::SimpleClientGoalState& state, const BlockDetectionResultConstPtr& result)
   {
     //ROS_INFO(" Got block detection callback. Adding blocks.");
-    turtlebot2i_block_manipulation::BlockPose block;
+    widowx_block_manipulation::BlockPose block;
     
     if (state != actionlib::SimpleClientGoalState::SUCCEEDED)
     {
@@ -232,7 +232,7 @@ public:
     }
   }
     
-  void moveBlock(const turtlebot2i_block_manipulation::BlockPose& start_block_pose, const geometry_msgs::Pose& end_pose)
+  void moveBlock(const widowx_block_manipulation::BlockPose& start_block_pose, const geometry_msgs::Pose& end_pose)
   {
     geometry_msgs::Pose start_pose;
     start_pose.position = start_block_pose.position;
@@ -272,7 +272,7 @@ public:
 int main(int argc, char** argv)
 {
   ros::init(argc, argv, "block_manipulation");
-  turtlebot2i_block_manipulation::BlockManipulationAction manip;
+  widowx_block_manipulation::BlockManipulationAction manip;
 
   ros::AsyncSpinner spinner(2);
   spinner.start();
