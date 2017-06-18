@@ -10,7 +10,7 @@
   <!-- Intel SR300 parameters -->
   <xacro:property name="sr300_cam_offset_px" value="0.330" />
   <xacro:property name="sr300_cam_offset_py" value="0.0" />
-  <xacro:property name="sr300_cam_offset_pz" value="0.385" />
+  <xacro:property name="sr300_cam_offset_pz" value="0.380" />
 
   <xacro:property name="sr300_cam_rgb_px" value="0.012"/>
   <xacro:property name="sr300_cam_rgb_py" value="0.003"/>

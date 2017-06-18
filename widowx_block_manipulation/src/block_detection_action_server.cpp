@@ -335,7 +335,7 @@ public:
 
         xmin += xside/2.0;
         ymin += yside/2.0;
-        //zmax -= block_size_/2.0;
+        zmax -= block_size_/2.0;
 
         ROS_INFO("Adding a new block! x=%.3f y=%.3f z=%.3f", (float) xmin , (float) ymin , (float) zmax );
         
