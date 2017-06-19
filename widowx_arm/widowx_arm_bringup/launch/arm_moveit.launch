@@ -9,6 +9,9 @@
 
   <!-- By default, we are not in debug mode -->
   <arg name="debug" default="false" />
+
+  <!-- By default, we are not using a SR300 depth sensor -->
+  <arg name="sr300" default="false"/>
   
   <!-- Load the URDF, SRDF and other .yaml configuration files on the param server -->
   <include file="$(find widowx_arm_moveit_config)/launch/planning_context.launch">
@@ -18,7 +21,9 @@
   <!-- If needed, broadcast static tf for robot root -->
   
   <!-- Start arm controller if we are not in simulation mode -->
-  <include unless="$(arg sim)" file="$(find widowx_arm_bringup)/launch/arm.launch"/>
+  <include unless="$(arg sim)" file="$(find widowx_arm_bringup)/launch/arm.launch">
+    <arg name="sr300" value="$(arg sr300)"/>
+  </include>
 
   <!-- Publish fake joint states if we do not have a robot connected -->
   <node if="$(arg sim)" name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">

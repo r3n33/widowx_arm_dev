@@ -4,6 +4,8 @@ Pre-release ROS support for WidowX including MoveIt! and Pick & Place demo. Not 
 
 Using SR300 for pointcloud.
 
-roslaunch widowx_arm_moveit_config widowx_arm_moveit.launch sim:=false
+Depending on interbotix/arbotix_ros/turtlebot2i [branch](https://github.com/Interbotix/arbotix_ros/tree/turtlebot2i) for gripper controller.
+
+roslaunch widowx_arm_bringup arm_moveit.launch sim:=false sr300:=true
 
 roslaunch widowx_block_manipulation block_sorting_demo.launch
