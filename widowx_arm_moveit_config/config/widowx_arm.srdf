@@ -39,6 +39,13 @@
         <joint name="joint_4" value="1.4957" />
         <joint name="joint_5" value="-1.3708" />
     </group_state>
+    <group_state name="ground_calibration_pose" group="widowx_arm">
+        <joint name="joint_1" value="0" />
+        <joint name="joint_2" value="0.994" />
+        <joint name="joint_3" value="0.5867" />
+        <joint name="joint_4" value="-1.5844" />
+        <joint name="joint_5" value="0" />
+    </group_state>
     <!--END EFFECTOR: Purpose: Represent information about an end effector.-->
     <end_effector name="main_eef" parent_link="wrist_2_link" group="widowx_gripper" parent_group="widowx_arm" />
     <!--VIRTUAL JOINT: Purpose: this element defines a virtual joint between a robot link and an external frame of reference (considered fixed with respect to the robot)-->
